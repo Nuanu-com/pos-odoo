@@ -2,7 +2,10 @@ module github.com/Nuanu-com/pos-odoo
 
 go 1.26.4
 
-require github.com/onsi/gomega v1.42.1
+require (
+	github.com/onsi/gomega v1.42.1
+	go.uber.org/mock v0.6.0
+)
 
 require (
 	github.com/Masterminds/semver/v3 v3.4.0 // indirect
