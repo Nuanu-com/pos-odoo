@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v7
+        with:
+          # Tracks the `go` directive in go.mod so CI and local stay on one toolchain.
+          go-version-file: go.mod
+
+      - name: Verify dependencies
+        run: go mod verify
+
+      - name: Check go.mod is tidy
+        run: go mod tidy -diff
+
+      - name: Check formatting
+        run: |
+          unformatted=$(gofmt -l .)
+          if [ -n "$unformatted" ]; then
+            echo "::error::gofmt needed on:"
+            echo "$unformatted"
+            exit 1
+          fi
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Build
+        run: go build ./...
+
+      - name: Test
+        # `go run` uses the ginkgo version pinned in go.mod, so the CLI and the
+        # library can never drift apart.
+        run: |
+          go run github.com/onsi/ginkgo/v2/ginkgo \
+            -r --race --cover --coverprofile=coverage.out \
+            --randomize-all --keep-going
+
+      - name: Coverage summary
+        if: always()
+        run: |
+          if [ -f coverage.out ]; then
+            echo "### Coverage" >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+            go tool cover -func=coverage.out | tail -1 >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage
+          path: coverage.out
+          if-no-files-found: ignore
