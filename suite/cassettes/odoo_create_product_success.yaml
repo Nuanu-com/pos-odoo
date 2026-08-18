@@ -1,0 +1,29 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: -1
+        host: localhost:8069
+        form: {}
+        headers:
+            Content-Type:
+                - application/json
+        body: '{"jsonrpc":"2.0","method":"call","id":1,"params":{"model":"product.product","method":"create","args":[{"name":"Iced Latte","list_price":4.5,"standard_price":1.8,"type":"consu","available_in_pos":true,"categ_id":1,"uom_id":1,"uom_po_id":1,"pos_categ_id":2,"barcode":"123456789"}],"kwargs":{}}}'
+        url: http://localhost:8069/web/dataset/call_kw/product.product/create
+        method: POST
+      response:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: -1
+        headers:
+            Content-Type:
+                - application/json; charset=utf-8
+        body: '{"jsonrpc":"2.0","id":1,"result":77}'
+        status: 200 OK
+        code: 200
+        duration: 210ms

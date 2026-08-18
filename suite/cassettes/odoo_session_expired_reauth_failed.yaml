@@ -1,0 +1,55 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: -1
+        host: localhost:8069
+        form: {}
+        headers:
+            Content-Type:
+                - application/json
+        body: '{"jsonrpc":"2.0","method":"call","id":1,"params":{"model":"account.tax","method":"web_search_read","args":[],"kwargs":{}}}'
+        url: http://localhost:8069/web/dataset/call_kw/account.tax/web_search_read
+        method: POST
+      response:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: -1
+        headers:
+            Content-Type:
+                - application/json; charset=utf-8
+        body: '{"jsonrpc":"2.0","id":1,"error":{"code":100,"message":"Odoo Session Expired","data":{"name":"odoo.http.SessionExpiredException","message":"Session Expired"}}}'
+        status: 200 OK
+        code: 200
+        duration: 30ms
+    - id: 1
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: -1
+        host: localhost:8069
+        form: {}
+        headers:
+            Content-Type:
+                - application/json
+        body: '{"jsonrpc":"2.0","method":"call","id":2,"params":{"db":"mydb","login":"admin","password":"admin"}}'
+        url: http://localhost:8069/web/session/authenticate
+        method: POST
+      response:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: -1
+        headers:
+            Content-Type:
+                - application/json; charset=utf-8
+        body: '{"jsonrpc":"2.0","id":2,"result":{"uid":false,"session_id":null}}'
+        status: 200 OK
+        code: 200
+        duration: 110ms

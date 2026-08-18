@@ -1,0 +1,133 @@
+---
+version: 2
+interactions:
+  - id: 0
+    request:
+      proto: HTTP/1.1
+      proto_major: 1
+      proto_minor: 1
+      content_length: 266
+      host: stg-odoo.nuanu.xyz
+      body: '{"jsonrpc":"2.0","method":"call","id":1,"params":{"model":"account.tax","method":"web_search_read","args":[],"kwargs":{"domain":[],"fields":["id","name","amount","amount_type","type_tax_use","price_include","active","description"],"limit":80,"offset":0,"order":""}}}'
+      headers:
+        Content-Type:
+          - application/json
+      url: https://stg-odoo.nuanu.xyz/web/dataset/call_kw/account.tax/web_search_read
+      method: POST
+    response:
+      proto: HTTP/2.0
+      proto_major: 2
+      proto_minor: 0
+      content_length: -1
+      uncompressed: true
+      body: '{"jsonrpc": "2.0", "id": null, "error": {"code": 100, "message": "Odoo Session Expired", "data": {"name": "odoo.http.SessionExpiredException", "debug": "Traceback (most recent call last):\n  File \"/home/odoo/odoo/odoo-server/odoo/http.py\", line 1589, in _serve_db\n    return service_model.retrying(self._serve_ir_http, self.env)\n  File \"/home/odoo/odoo/odoo-server/odoo/service/model.py\", line 133, in retrying\n    result = func()\n  File \"/home/odoo/odoo/odoo-server/odoo/http.py\", line 1614, in _serve_ir_http\n    ir_http._authenticate(rule.endpoint)\n  File \"/home/odoo/odoo/odoo-server/odoo/addons/base/models/ir_http.py\", line 127, in _authenticate\n    getattr(cls, f''_auth_method_{auth}'')()\n  File \"/home/odoo/odoo/odoo-server/odoo/addons/base/models/ir_http.py\", line 106, in _auth_method_user\n    raise http.SessionExpiredException(\"Session expired\")\nodoo.http.SessionExpiredException: Session expired\n", "message": "Session expired", "arguments": ["Session expired"], "context": {}}}}'
+      headers:
+        Content-Type:
+          - application/json; charset=utf-8
+        Date:
+          - Tue, 23 Jun 2026 08:22:15 GMT
+        Permissions-Policy:
+          - geolocation=(),camera=(),microphone=(),payment=()
+        Referrer-Policy:
+          - strict-origin-when-cross-origin
+        Server:
+          - run-odoo.com
+        Strict-Transport-Security:
+          - max-age=31536000; includeSubDomains; preload
+        X-Content-Type-Options:
+          - nosniff
+        X-Frame-Options:
+          - SAMEORIGIN
+        X-Xss-Protection:
+          - 1; mode=block
+      status: 200 OK
+      code: 200
+      duration: 437.902667ms
+  - id: 1
+    request:
+      proto: HTTP/1.1
+      proto_major: 1
+      proto_minor: 1
+      content_length: 110
+      host: stg-odoo.nuanu.xyz
+      body: '{"jsonrpc":"2.0","method":"call","id":2,"params":{}}'
+      headers:
+        Content-Type:
+          - application/json
+      url: https://stg-odoo.nuanu.xyz/web/session/authenticate
+      method: POST
+    response:
+      proto: HTTP/2.0
+      proto_major: 2
+      proto_minor: 0
+      content_length: -1
+      uncompressed: true
+      body: '{"jsonrpc": "2.0", "id": 2, "result": {"uid": 520, "is_system": false, "is_admin": false, "user_context": {"lang": "en_US", "tz": "Asia/Makassar", "uid": 520}, "db": "woodenfish", "server_version": "16.0+e", "server_version_info": [16, 0, 0, "final", 0, "e"], "support_url": "https://www.odoo.com/help", "name": "Yudi", "username": "dev@nuanu.com", "partner_display_name": "Yudi", "company_id": 1, "partner_id": 38176, "web.base.url": "https://odoo.nuanu.xyz", "active_ids_limit": 20000, "profile_session": null, "profile_collectors": null, "profile_params": null, "max_file_upload_size": 134217728, "home_action_id": false, "cache_hashes": {"translations": "146edb58a66f70a66dcb29879c851186b2d951da", "load_menus": "0128e2a8ff6fdc56d6f16d305536a3b92c1c55d27b22cd6e71c95f7177767bf9"}, "currencies": {"21": {"symbol": "$", "position": "before", "digits": [69, 2]}, "5": {"symbol": "CHF", "position": "before", "digits": [69, 2]}, "7": {"symbol": "¥", "position": "before", "digits": [69, 2]}, "1": {"symbol": "€", "position": "after", "digits": [69, 2]}, "142": {"symbol": "£", "position": "before", "digits": [69, 2]}, "24": {"symbol": "$", "position": "before", "digits": [69, 2]}, "12": {"symbol": "Rp", "position": "before", "digits": [69, 2]}, "20": {"symbol": "₹", "position": "before", "digits": [69, 2]}, "25": {"symbol": "¥", "position": "before", "digits": [69, 0]}, "37": {"symbol": "S$", "position": "before", "digits": [69, 2]}, "132": {"symbol": "฿", "position": "after", "digits": [69, 2]}, "2": {"symbol": "$", "position": "before", "digits": [69, 2]}}, "bundle_params": {"lang": "en_US"}, "user_companies": {"current_company": 1, "allowed_companies": {"1": {"id": 1, "name": "PT Wooden Fish Village", "sequence": 0}}}, "show_effect": true, "display_switch_company_menu": false, "user_id": [520], "max_time_between_keys_in_ms": 100, "warning": "user", "expiration_date": "2027-01-10 00:00:00", "expiration_reason": "renewal", "notification_type": "email", "map_box_token": false, "odoobot_initialized": true, "ocn_token_key": false, "fcm_project_id": "186813708685", "inbox_action": 121}}'
+      headers:
+        Content-Type:
+          - application/json; charset=utf-8
+        Date:
+          - Tue, 23 Jun 2026 08:22:19 GMT
+        Permissions-Policy:
+          - geolocation=(),camera=(),microphone=(),payment=()
+        Referrer-Policy:
+          - strict-origin-when-cross-origin
+        Server:
+          - run-odoo.com
+        Set-Cookie:
+          - session_id=8dc41e521f9335d246b40e8ce168f48aa4642b53; Expires=Tue, 30 Jun 2026 08:22:19 GMT; Max-Age=604800; HttpOnly; Path=/; secure
+        Strict-Transport-Security:
+          - max-age=31536000; includeSubDomains; preload
+        X-Content-Type-Options:
+          - nosniff
+        X-Frame-Options:
+          - SAMEORIGIN
+        X-Xss-Protection:
+          - 1; mode=block
+      status: 200 OK
+      code: 200
+      duration: 3.816777542s
+  - id: 2
+    request:
+      proto: HTTP/1.1
+      proto_major: 1
+      proto_minor: 1
+      content_length: 266
+      host: stg-odoo.nuanu.xyz
+      body: '{"jsonrpc":"2.0","method":"call","id":3,"params":{"model":"account.tax","method":"web_search_read","args":[],"kwargs":{"domain":[],"fields":["id","name","amount","amount_type","type_tax_use","price_include","active","description"],"limit":80,"offset":0,"order":""}}}'
+      headers:
+        Content-Type:
+          - application/json
+        Cookie:
+          - session_id=8dc41e521f9335d246b40e8ce168f48aa4642b53
+      url: https://stg-odoo.nuanu.xyz/web/dataset/call_kw/account.tax/web_search_read
+      method: POST
+    response:
+      proto: HTTP/2.0
+      proto_major: 2
+      proto_minor: 0
+      content_length: -1
+      uncompressed: true
+      body: '{"jsonrpc": "2.0", "id": 3, "result": {"length": 40, "records": [{"id": 1, "name": "PPN-S Non Luxury Good (2025)", "amount": 11.0, "amount_type": "percent", "type_tax_use": "sale", "price_include": false, "active": true, "description": "PPN (Non Luxury Goods)"}, {"id": 636, "name": "PPN-S Luxury Good (2025)", "amount": 12.0, "amount_type": "percent", "type_tax_use": "sale", "price_include": false, "active": true, "description": "PPN (Luxury Goods)"}, {"id": 2, "name": "PPN-P Exc 11%", "amount": 11.0, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "11%"}, {"id": 832, "name": "PPN-P Exc 12%", "amount": 12.0, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "12%"}, {"id": 383, "name": "PPN-P Exc 1.1%", "amount": 1.1, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "1.1%"}, {"id": 671, "name": "PPN-P Exc 1.2%", "amount": 1.2, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "1.2%"}, {"id": 439, "name": "PPN-LN Exc 11%", "amount": -11.0, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "11%"}, {"id": 8, "name": "PPh 23-P -2%", "amount": -2.0, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "PPh 23-2%"}, {"id": 27, "name": "PPh 4 Ayat 2-P -1.75%", "amount": -1.75, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "PPh 4(2)-1.75%"}, {"id": 10, "name": "PPh 4 Ayat 2-S -0.50%", "amount": -0.5, "amount_type": "percent", "type_tax_use": "sale", "price_include": false, "active": true, "description": "PPh 4(2)-0.50%"}, {"id": 11, "name": "PPh 4 Ayat 2-P -4%", "amount": -4.0, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "PPh 4(2)-4%"}, {"id": 19, "name": "PPh 4 Ayat 2-S -10%", "amount": -10.0, "amount_type": "percent", "type_tax_use": "sale", "price_include": false, "active": true, "description": "PPh 4(2)-10%"}, {"id": 20, "name": "PPh 4 Ayat 2-S -1.75%", "amount": -1.75, "amount_type": "percent", "type_tax_use": "sale", "price_include": false, "active": true, "description": "PPh 4(2)-1.75%"}, {"id": 21, "name": "PPh 4 Ayat 2-S -4%", "amount": -4.0, "amount_type": "percent", "type_tax_use": "sale", "price_include": false, "active": true, "description": "PPh 4(2)-4%"}, {"id": 23, "name": "PPh 4 Ayat 2-S -3.50%", "amount": -3.5, "amount_type": "percent", "type_tax_use": "sale", "price_include": false, "active": true, "description": "PPh 4(2)-3.50%"}, {"id": 33, "name": "PPh 21 Non Employee -25%", "amount": -25.0, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "Pph 21-25%"}, {"id": 320, "name": "PPh 26-P -0%", "amount": 0.0, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "PPh 26-20%"}, {"id": 13, "name": "PPh 23-S -4% (Non NPWP)", "amount": -4.0, "amount_type": "percent", "type_tax_use": "sale", "price_include": false, "active": true, "description": "PPh 23-4%"}, {"id": 24, "name": "PPh 4 Ayat 2-S -6%", "amount": -6.0, "amount_type": "percent", "type_tax_use": "sale", "price_include": false, "active": true, "description": "PPh 4(2)-6%"}, {"id": 30, "name": "PPh 4 Ayat 2-P -6%", "amount": -6.0, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "PPh 4(2)-6%"}, {"id": 7, "name": "PPh 23 -2%", "amount": -2.0, "amount_type": "percent", "type_tax_use": "sale", "price_include": false, "active": true, "description": "PPh 23-2%"}, {"id": 25, "name": "PPh 4 Ayat 2-P -0.50%", "amount": -0.5, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "PPh 4(2)-0.50%"}, {"id": 26, "name": "PPh 4 Ayat 2-P -10%", "amount": -10.0, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "PPh 4(2)-10%"}, {"id": 31, "name": "PPh 26-P -20%", "amount": -20.0, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "PPh 26-20%"}, {"id": 34, "name": "PPh 21 Non Employee -30%", "amount": -30.0, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "Pph 21-30%"}, {"id": 37, "name": "PPh 21 Non Employee Non NPWP -30%", "amount": -30.0, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "Pph 21-30%"}, {"id": 38, "name": "PPh 21 Non Employee Non NPWP -36%", "amount": -36.0, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "Pph 21-36%"}, {"id": 9, "name": "PPh 23-P -4% (Non NPWP)", "amount": -4.0, "amount_type": "percent", "type_tax_use": "purchase", "price_include": true, "active": true, "description": "PPh 23-4%"}, {"id": 29, "name": "PPh 4 Ayat 2-P -3.50%", "amount": -3.5, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "PPh 4(2)-3.50%"}, {"id": 35, "name": "PPh 21 Non Employee Non NPWP -3%", "amount": -3.0, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "Pph 21-6%"}, {"id": 12, "name": "PPh 21 Non Employee -2.5%", "amount": -2.5, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "PPh21 -5%"}, {"id": 36, "name": "PPh 21 Non Employee Non NPWP -9%", "amount": -9.0, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "Pph 21-18%"}, {"id": 28, "name": "PPh 4 Ayat 2-P -2.65%", "amount": -2.65, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "PPh 4(2)-2.60%"}, {"id": 39, "name": "PPh 23-P-RENT-2%", "amount": -2.0, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "PPh 23-2%"}, {"id": 41, "name": "PPh 23-P-RENT-4% (Non NPWP)", "amount": -4.0, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "PPh 23-2%"}, {"id": 32, "name": "PPh 21 Non Employee -7.5%", "amount": -7.5, "amount_type": "percent", "type_tax_use": "purchase", "price_include": false, "active": true, "description": "Pph 21-7.5%"}, {"id": 321, "name": "PHR - Exc 10%", "amount": 10.0, "amount_type": "percent", "type_tax_use": "sale", "price_include": false, "active": true, "description": "PHR - Exc 10%"}, {"id": 441, "name": "Deposit Fee", "amount": 20000.0, "amount_type": "fixed", "type_tax_use": "sale", "price_include": false, "active": true, "description": false}, {"id": 495, "name": "Service Charge 10%", "amount": 10.0, "amount_type": "percent", "type_tax_use": "sale", "price_include": true, "active": true, "description": "Service Charge 10%"}, {"id": 384, "name": "PHR Inc 10%", "amount": 10.0, "amount_type": "percent", "type_tax_use": "sale", "price_include": true, "active": true, "description": "PHR - Inc 10%"}]}}'
+      headers:
+        Content-Type:
+          - application/json; charset=utf-8
+        Date:
+          - Tue, 23 Jun 2026 08:22:23 GMT
+        Permissions-Policy:
+          - geolocation=(),camera=(),microphone=(),payment=()
+        Referrer-Policy:
+          - strict-origin-when-cross-origin
+        Server:
+          - run-odoo.com
+        Strict-Transport-Security:
+          - max-age=31536000; includeSubDomains; preload
+        X-Content-Type-Options:
+          - nosniff
+        X-Frame-Options:
+          - SAMEORIGIN
+        X-Xss-Protection:
+          - 1; mode=block
+      status: 200 OK
+      code: 200
+      duration: 326.452875ms

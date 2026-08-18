@@ -1,0 +1,29 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: -1
+        host: localhost:8069
+        form: {}
+        headers:
+            Content-Type:
+                - application/json
+        body: '{"jsonrpc":"2.0","method":"call","id":1,"params":{"model":"pos.session","method":"read","args":[[5]],"kwargs":{"fields":["id","name","sequence_number","cash_register_total_entry_encoding","cash_register_balance_end","cash_register_balance_end_real","cash_register_difference"]}}}'
+        url: http://localhost:8069/web/dataset/call_kw/pos.session/read
+        method: POST
+      response:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: -1
+        headers:
+            Content-Type:
+                - application/json; charset=utf-8
+        body: '{"jsonrpc":"2.0","id":1,"result":[{"id":5,"name":"Main/0001","sequence_number":42,"cash_register_total_entry_encoding":50000,"cash_register_balance_end":198000,"cash_register_balance_end_real":0,"cash_register_difference":-198000}]}'
+        status: 200 OK
+        code: 200
+        duration: 85ms

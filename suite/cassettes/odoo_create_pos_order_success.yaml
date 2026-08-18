@@ -1,0 +1,29 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: -1
+        host: localhost:8069
+        form: {}
+        headers:
+            Content-Type:
+                - application/json
+        body: '{"jsonrpc":"2.0","method":"call","id":1,"params":{"model":"pos.order","method":"create_from_ui","args":[[{"data":{"name":"Order 00001-001-0001","pos_session_id":5,"user_id":3,"partner_id":false,"creation_date":"2024-06-19T10:30:00","fiscal_position_id":false,"pricelist_id":1,"amount_paid":15,"amount_total":15,"amount_tax":1.36,"amount_return":0,"to_invoice":false,"to_ship":false,"is_tipped":false,"tip_amount":0,"access_token":"","lines":[[0,0,{"product_id":101,"qty":2,"price_unit":7.5,"price_subtotal":15,"price_subtotal_incl":15,"discount":0,"tax_ids":[[6,0,[5]]],"pack_lot_ids":[]}]],"statement_ids":[[0,0,{"payment_method_id":1,"amount":15,"name":"2024-06-19 10:30:00"}]]}}]],"kwargs":{"draft":false}}}'
+        url: http://localhost:8069/web/dataset/call_kw/pos.order/create_from_ui
+        method: POST
+      response:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: -1
+        headers:
+            Content-Type:
+                - application/json; charset=utf-8
+        body: '{"jsonrpc":"2.0","id":1,"result":[{"id":42,"pos_reference":"Order 00001-001-0001","account_move":false}]}'
+        status: 200 OK
+        code: 200
+        duration: 380ms

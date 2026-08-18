@@ -1,0 +1,29 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: -1
+        host: localhost:8069
+        form: {}
+        headers:
+            Content-Type:
+                - application/json
+        body: '{"jsonrpc":"2.0","method":"call","id":1,"params":{"model":"pos.session","method":"close_session_from_ui","args":[[5],[[3,-2.5]]],"kwargs":{}}}'
+        url: http://localhost:8069/web/dataset/call_kw/pos.session/close_session_from_ui
+        method: POST
+      response:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: -1
+        headers:
+            Content-Type:
+                - application/json; charset=utf-8
+        body: '{"jsonrpc":"2.0","id":1,"result":{"successful":true}}'
+        status: 200 OK
+        code: 200
+        duration: 300ms

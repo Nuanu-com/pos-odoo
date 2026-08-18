@@ -1,0 +1,29 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: -1
+        host: localhost:8069
+        form: {}
+        headers:
+            Content-Type:
+                - application/json
+        body: '{"jsonrpc":"2.0","method":"call","id":1,"params":{"model":"product.template","method":"create","args":[{"name":"Iced Latte","list_price":4.5,"type":"consu","available_in_pos":true}],"kwargs":{}}}'
+        url: http://localhost:8069/web/dataset/call_kw/product.template/create
+        method: POST
+      response:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: -1
+        headers:
+            Content-Type:
+                - application/json; charset=utf-8
+        body: '{"jsonrpc":"2.0","id":1,"error":{"code":200,"message":"Odoo Server Error","data":{"name":"odoo.exceptions.ValidationError","message":"The operation cannot be completed: another record already exists with the same name."}}}'
+        status: 200 OK
+        code: 200
+        duration: 95ms

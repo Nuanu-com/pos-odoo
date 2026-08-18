@@ -1,0 +1,31 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: -1
+        host: localhost:8069
+        form: {}
+        headers:
+            Content-Type:
+                - application/json
+        body: '{"jsonrpc":"2.0","method":"call","id":1,"params":{"db":"mydb","login":"admin","password":"admin"}}'
+        url: http://localhost:8069/web/session/authenticate
+        method: POST
+      response:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: -1
+        headers:
+            Content-Type:
+                - application/json; charset=utf-8
+            Set-Cookie:
+                - session_id=testSessionId; Path=/; HttpOnly; SameSite=Lax
+        body: '{"jsonrpc":"2.0","id":1,"result":{"uid":2,"is_superuser":false,"session_id":"testSessionId","db":"mydb","login":"admin","name":"Administrator"}}'
+        status: 200 OK
+        code: 200
+        duration: 150ms
