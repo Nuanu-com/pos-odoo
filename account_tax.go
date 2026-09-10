@@ -69,9 +69,14 @@ type computeAllTaxKWArgs struct {
 // ComputeAllTax calls /web/dataset/call_kw/account.tax/compute_all.
 // It mirrors Odoo's own tax computation for priceUnit, returning the per-tax
 // base/amount breakdown plus totals excluding/including tax. quantity defaults
-// to 1 when <= 0.
+// to 1 when it is zero, which is how an unset quantity arrives.
+//
+// A negative quantity is passed through. Odoo computes the base as priceUnit
+// times quantity, so a refund line of minus one comes back with negative totals
+// — which is how Odoo writes a refund itself. Defaulting those to 1 would answer
+// for a sale of one unit instead, positive and, above one unit, the wrong size.
 func (o *odooClientImpl) ComputeAllTax(taxIDs []int, priceUnit float64, quantity float64) (*AccountTaxComputeAllResult, error) {
-	if quantity <= 0 {
+	if quantity == 0 {
 		quantity = 1
 	}
 	result, err := callKw[AccountTaxComputeAllResult](o, "account.tax", "compute_all", []any{taxIDs, priceUnit}, computeAllTaxKWArgs{Quantity: quantity})
