@@ -69,6 +69,7 @@ type SearchReadResult[T any] struct {
 type OdooClient interface {
 	AuthenticatedUserID() int
 	SearchReadAccountTax(domain []any, fields []string, limit, offset int) (*SearchReadResult[AccountTax], error)
+	SearchReadAccountTaxWithOptions(opts SearchReadAccountTaxOptions) (*SearchReadResult[AccountTax], error)
 	ComputeAllTax(taxIDs []int, priceUnit float64, quantity float64) (*AccountTaxComputeAllResult, error)
 	CreateProductTemplate(input ProductTemplateInput) (int, error)
 	CreateProduct(input ProductProductInput) (int, error)

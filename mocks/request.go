@@ -232,6 +232,21 @@ func (mr *MockOdooClientMockRecorder) SearchReadAccountTax(domain, fields, limit
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchReadAccountTax", reflect.TypeOf((*MockOdooClient)(nil).SearchReadAccountTax), domain, fields, limit, offset)
 }
 
+// SearchReadAccountTaxWithOptions mocks base method.
+func (m *MockOdooClient) SearchReadAccountTaxWithOptions(opts pos_odoo.SearchReadAccountTaxOptions) (*pos_odoo.SearchReadResult[pos_odoo.AccountTax], error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchReadAccountTaxWithOptions", opts)
+	ret0, _ := ret[0].(*pos_odoo.SearchReadResult[pos_odoo.AccountTax])
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchReadAccountTaxWithOptions indicates an expected call of SearchReadAccountTaxWithOptions.
+func (mr *MockOdooClientMockRecorder) SearchReadAccountTaxWithOptions(opts any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchReadAccountTaxWithOptions", reflect.TypeOf((*MockOdooClient)(nil).SearchReadAccountTaxWithOptions), opts)
+}
+
 // SearchReadProduct mocks base method.
 func (m *MockOdooClient) SearchReadProduct(domain []any, fields []string, limit, offset int) ([]pos_odoo.ProductProduct, error) {
 	m.ctrl.T.Helper()

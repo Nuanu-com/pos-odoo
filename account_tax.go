@@ -10,6 +10,8 @@ type AccountTax struct {
 	PriceInclude bool    `json:"price_include"` // true = tax is included in the listed price
 	Active       bool    `json:"active"`
 	Description  any     `json:"description"`
+	// CompanyID is only populated when "company_id" is requested in fields.
+	CompanyID *OdooMany2one `json:"company_id,omitempty"`
 }
 
 var defaultAccountTaxFields = []string{
@@ -23,22 +25,54 @@ type webSearchReadKWArgs struct {
 	Limit  int      `json:"limit"`
 	Offset int      `json:"offset"`
 	Order  string   `json:"order"`
+	// Context is omitted when nil, so callers that don't set it send the same
+	// payload as before it existed.
+	Context map[string]any `json:"context,omitempty"`
+}
+
+// SearchReadAccountTaxOptions configures SearchReadAccountTaxWithOptions.
+type SearchReadAccountTaxOptions struct {
+	Domain []any    // nil for no filter
+	Fields []string // nil for the default field set
+	Limit  int      // 0 for no limit
+	Offset int
+	// Order is an Odoo order clause such as "id asc". Empty uses the model's
+	// default order.
+	Order string
+	// Context is passed through as the call's context, e.g.
+	// {"allowed_company_ids": []int{1}} to act within a specific company.
+	Context map[string]any
 }
 
 // SearchReadAccountTax calls /web/dataset/call_kw/account.tax/web_search_read.
 // Pass nil domain for no filter, nil fields for the default field set.
 func (o *odooClientImpl) SearchReadAccountTax(domain []any, fields []string, limit, offset int) (*SearchReadResult[AccountTax], error) {
-	if domain == nil {
-		domain = []any{}
-	}
-	if len(fields) == 0 {
-		fields = defaultAccountTaxFields
-	}
-	kwargs := webSearchReadKWArgs{
+	return o.SearchReadAccountTaxWithOptions(SearchReadAccountTaxOptions{
 		Domain: domain,
 		Fields: fields,
 		Limit:  limit,
 		Offset: offset,
+	})
+}
+
+// SearchReadAccountTaxWithOptions is SearchReadAccountTax with control over the
+// order and the call context.
+func (o *odooClientImpl) SearchReadAccountTaxWithOptions(opts SearchReadAccountTaxOptions) (*SearchReadResult[AccountTax], error) {
+	domain := opts.Domain
+	if domain == nil {
+		domain = []any{}
+	}
+	fields := opts.Fields
+	if len(fields) == 0 {
+		fields = defaultAccountTaxFields
+	}
+	kwargs := webSearchReadKWArgs{
+		Domain:  domain,
+		Fields:  fields,
+		Limit:   opts.Limit,
+		Offset:  opts.Offset,
+		Order:   opts.Order,
+		Context: opts.Context,
 	}
 	result, err := callKw[SearchReadResult[AccountTax]](o, "account.tax", "web_search_read", []any{}, kwargs)
 	if err != nil {

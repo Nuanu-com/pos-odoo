@@ -65,6 +65,65 @@ var _ = Describe("OdooClient", func() {
 		})
 	})
 
+	Describe("SearchReadAccountTaxWithOptions", func() {
+		Context("with order and context set", func() {
+			It("sends them and decodes company_id", func() {
+				var sent string
+				httpClient := &http.Client{Transport: roundTripFunc(func(r *http.Request) (*http.Response, error) {
+					body, err := io.ReadAll(r.Body)
+					if err != nil {
+						return nil, err
+					}
+					sent = string(body)
+					return jsonResponse(`{"jsonrpc":"2.0","id":1,"result":{"length":1,"records":[` +
+						`{"id":1,"name":"PPN-S Non Luxury Good (2025)","amount":11.0,"amount_type":"percent",` +
+						`"price_include":false,"company_id":[1,"Nuanu"]}]}}`), nil
+				})}
+				client := odoo.NewOdooClient(httpClient, "http://localhost:8069")
+
+				result, err := client.SearchReadAccountTaxWithOptions(odoo.SearchReadAccountTaxOptions{
+					Domain: []any{
+						[]any{"company_id", "=", 1},
+						[]any{"type_tax_use", "=", "sale"},
+					},
+					Fields:  []string{"id", "name", "amount", "amount_type", "price_include", "company_id"},
+					Order:   "id asc",
+					Context: map[string]any{"allowed_company_ids": []int{1}},
+				})
+
+				Expect(err).To(BeNil())
+				Expect(sent).To(ContainSubstring(`"domain":[["company_id","=",1],["type_tax_use","=","sale"]]`))
+				Expect(sent).To(ContainSubstring(`"order":"id asc"`))
+				Expect(sent).To(ContainSubstring(`"context":{"allowed_company_ids":[1]}`))
+				Expect(result.Records).To(HaveLen(1))
+				Expect(result.Records[0].CompanyID).To(Equal(&odoo.OdooMany2one{ID: 1, Name: "Nuanu"}))
+			})
+		})
+
+		// SearchReadAccountTax delegates here; callers that never set the new options must
+		// keep sending exactly the payload they sent before those options existed.
+		Context("through SearchReadAccountTax", func() {
+			It("sends the same kwargs as before, with no context", func() {
+				var sent string
+				httpClient := &http.Client{Transport: roundTripFunc(func(r *http.Request) (*http.Response, error) {
+					body, err := io.ReadAll(r.Body)
+					if err != nil {
+						return nil, err
+					}
+					sent = string(body)
+					return jsonResponse(`{"jsonrpc":"2.0","id":1,"result":{"length":0,"records":[]}}`), nil
+				})}
+				client := odoo.NewOdooClient(httpClient, "http://localhost:8069")
+
+				result, err := client.SearchReadAccountTax(nil, nil, 80, 0)
+
+				Expect(err).To(BeNil())
+				Expect(sent).To(ContainSubstring(`"kwargs":{"domain":[],"fields":["id","name","amount","amount_type","type_tax_use","price_include","active","description"],"limit":80,"offset":0,"order":""}}`))
+				Expect(result.Records).To(BeEmpty())
+			})
+		})
+	})
+
 	Describe("ComputeAllTax", func() {
 		Context("with a successful response", func() {
 			It("returns the tax breakdown and totals", func() {
