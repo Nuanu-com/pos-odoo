@@ -98,11 +98,14 @@ type odooClientImpl struct {
 	authUsername     string
 	authPassword     string
 	authDB           string
+	authAPIKey       string
 	authenticatedUID atomic.Int64
 }
 
 type OdooOption func(*odooClientImpl)
 
+// AddAuthentication enables session (cookie) auth with a login and password.
+// Calls go through /web/dataset/call_kw and re-authenticate on session expiry.
 func AddAuthentication(pred func() (username, password, db string)) func(*odooClientImpl) {
 	authUsername, authPassword, authDB := pred()
 
@@ -113,8 +116,25 @@ func AddAuthentication(pred func() (username, password, db string)) func(*odooCl
 	}
 }
 
+// AddAPIKeyAuthentication enables stateless API key auth (Odoo 14+). Calls go
+// through /jsonrpc execute_kw, so no cookie jar is needed and sessions never
+// expire. The uid is resolved once via common.authenticate on first use.
+//
+// The key is generated per user in Odoo under Preferences → Account Security →
+// New API Key, and must be paired with that user's login.
+func AddAPIKeyAuthentication(pred func() (login, apiKey, db string)) func(*odooClientImpl) {
+	login, apiKey, db := pred()
+
+	return func(oci *odooClientImpl) {
+		oci.authUsername = login
+		oci.authAPIKey = apiKey
+		oci.authDB = db
+	}
+}
+
 // NewOdooClient creates a new Odoo client. The caller is responsible for
-// supplying an *http.Client with a cookie jar when session auth is needed:
+// supplying an *http.Client with a cookie jar when session auth is needed
+// (not required with AddAPIKeyAuthentication):
 //
 //	jar, _ := cookiejar.New(nil)
 //	client := odoo.NewOdooClient(&http.Client{Jar: jar}, baseURL)
@@ -192,9 +212,13 @@ func (o *odooClientImpl) doAuthenticate(username, password, db string) error {
 	return nil
 }
 
-// callKw sends a JSON-RPC /web/dataset/call_kw request. On session expiry it
-// re-authenticates once (using stored credentials) and retries the call.
+// callKw invokes model.method on Odoo. With an API key it uses /jsonrpc
+// execute_kw; otherwise it sends a /web/dataset/call_kw request and, on
+// session expiry, re-authenticates once (using stored credentials) and retries.
 func callKw[T any](o *odooClientImpl, model, method string, args []any, kwargs any) (T, error) {
+	if o.authAPIKey != "" {
+		return doExecuteKw[T](o, model, method, args, kwargs)
+	}
 	result, err := doCallKw[T](o, model, method, args, kwargs)
 	if err == nil || !isSessionExpired(err) || o.authDB == "" {
 		return result, err
@@ -247,6 +271,96 @@ func doCallKw[T any](o *odooClientImpl, model, method string, args []any, kwargs
 
 		b, _ := json.Marshal(rpcResp)
 		slog.Error("Error calling Odoo", slog.Any("E", b))
+		return zero, &rpcError{
+			name:    rpcResp.Error.Data.Name,
+			message: rpcResp.Error.Data.Message,
+		}
+	}
+	return rpcResp.Result, nil
+}
+
+type jsonRPCServiceParams struct {
+	Service string `json:"service"`
+	Method  string `json:"method"`
+	Args    []any  `json:"args"`
+}
+
+// ensureAPIKeyUID returns the uid for the API key user, calling
+// common.authenticate on first use. The uid never expires, so it is cached.
+func (o *odooClientImpl) ensureAPIKeyUID() (int64, error) {
+	if uid := o.authenticatedUID.Load(); uid > 0 {
+		return uid, nil
+	}
+	o.mu.Lock()
+	defer o.mu.Unlock()
+	if uid := o.authenticatedUID.Load(); uid > 0 {
+		return uid, nil
+	}
+
+	raw, err := postJSONRPC[json.RawMessage](o, jsonRPCServiceParams{
+		Service: "common",
+		Method:  "authenticate",
+		Args:    []any{o.authDB, o.authUsername, o.authAPIKey, map[string]any{}},
+	})
+	if err != nil {
+		return 0, err
+	}
+	// Odoo returns false (not an int uid) when credentials are wrong.
+	var uid int64
+	if err := json.Unmarshal(raw, &uid); err != nil || uid <= 0 {
+		return 0, errors.New("odoo: authentication failed — invalid credentials")
+	}
+	o.authenticatedUID.Store(uid)
+	return uid, nil
+}
+
+// doExecuteKw calls object.execute_kw over /jsonrpc using the API key.
+func doExecuteKw[T any](o *odooClientImpl, model, method string, args []any, kwargs any) (T, error) {
+	var zero T
+	uid, err := o.ensureAPIKeyUID()
+	if err != nil {
+		return zero, err
+	}
+	if args == nil {
+		args = []any{}
+	}
+	return postJSONRPC[T](o, jsonRPCServiceParams{
+		Service: "object",
+		Method:  "execute_kw",
+		Args:    []any{o.authDB, uid, o.authAPIKey, model, method, args, kwargs},
+	})
+}
+
+func postJSONRPC[T any](o *odooClientImpl, params jsonRPCServiceParams) (T, error) {
+	var zero T
+	body, err := json.Marshal(jsonRPCRequest{
+		JSONRPC: "2.0",
+		Method:  "call",
+		ID:      o.nextID(),
+		Params:  params,
+	})
+	if err != nil {
+		return zero, err
+	}
+	resp, err := o.httpClient.Post(o.baseURL+"/jsonrpc", "application/json", bytes.NewReader(body))
+	if err != nil {
+		return zero, err
+	}
+	defer resp.Body.Close()
+	raw, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return zero, err
+	}
+	var rpcResp jsonRPCResponse[T]
+	if err := json.Unmarshal(raw, &rpcResp); err != nil {
+		return zero, err
+	}
+	if rpcResp.Error != nil {
+		// Log name/message only: the request carries the API key.
+		slog.Error("Error calling Odoo",
+			slog.String("service", params.Service),
+			slog.String("name", rpcResp.Error.Data.Name),
+			slog.String("message", rpcResp.Error.Data.Message))
 		return zero, &rpcError{
 			name:    rpcResp.Error.Data.Name,
 			message: rpcResp.Error.Data.Message,
